@@ -1,26 +1,78 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Spotify from 'spotify-web-api-js';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
+
+const spotifyWebApi = new Spotify();
+
+class App extends Component {
+
+  constructor() {
+    super();
+    const params = this.getHashParams();
+    this.state = {
+      loggedIn: params.access_token ? true : false,
+      nowPlaying: {
+        name: 'Not checked',
+        albumArt: '',
+        releaseDate: '-',
+        device: '',
+        artist: '',
+        albumType: '',
+        artistLink: ''
+      }
+    }
+    if (params.access_token) {
+      spotifyWebApi.setAccessToken(params.access_token)
+    }
+  }
+
+  getHashParams() {
+    var hashParams = {};
+    var e, r = /([^&;=]+)=?([^&;]*)/g,
+      q = window.location.hash.substring(1);
+    while (e = r.exec(q)) {
+      hashParams[e[1]] = decodeURIComponent(e[2]);
+    }
+    return hashParams;
+  }
+
+  getNowPlaying() {
+    spotifyWebApi.getMyCurrentPlaybackState()
+      .then((response) => {
+        this.setState({
+          nowPlaying: {
+            name: response.item.name,
+            albumArt: response.item.album.images[0].url,
+            releaseDate: response.item.album.release_date,
+            device: response.device.name,
+            artist: response.item.artists[0].name,
+            albumType: response.item.album.album_type,
+            artistLink: response.item.artists[0].uri
+          }
+        })
+      })
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <a href='http://localhost:8888' >
+          <button>Login with Spotify</button>
         </a>
-      </header>
-    </div>
-  );
+        <button onClick={() => this.getNowPlaying()}>Check Now Playing</button>
+        <div className='songWrapper' >
+          <h4>Now Playing</h4>
+          <h2>{this.state.nowPlaying.name}</h2>
+          <h4>{this.state.nowPlaying.albumType} By <a href={this.state.nowPlaying.artistLink}>{this.state.nowPlaying.artist}</a></h4>
+          <img src={this.state.nowPlaying.albumArt} alt={this.state.nowPlaying.name} style={{ width: 100 }}></img>
+          <p>Released on: {this.state.nowPlaying.releaseDate}</p>
+          <br />
+          <p>Playing on: {this.state.nowPlaying.device}</p>
+        </div>
+      </div >
+    );
+  }
 }
 
 export default App;
