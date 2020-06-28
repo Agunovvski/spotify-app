@@ -13,10 +13,10 @@ class App extends Component {
     this.state = {
       loggedIn: params.access_token ? true : false,
       nowPlaying: {
-        name: 'Not checked',
+        name: '-',
         albumArt: '',
         releaseDate: '-',
-        device: '',
+        device: -'',
         artist: '',
         albumType: '',
         artistLink: ''
@@ -61,7 +61,9 @@ class App extends Component {
           <button>Login with Spotify</button>
         </a>
         <button onClick={() => this.getNowPlaying()}>Check Now Playing</button>
-        <div className='songWrapper' >
+        <div className='songWrapper' style={{
+          backgroundImage: `linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,.7)), url(${this.state.nowPlaying.albumArt})`
+        }}>
           <h4>Now Playing</h4>
           <h2>{this.state.nowPlaying.name}</h2>
           <h4>{this.state.nowPlaying.albumType} By <a href={this.state.nowPlaying.artistLink}>{this.state.nowPlaying.artist}</a></h4>
