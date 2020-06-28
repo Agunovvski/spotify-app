@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Spotify from 'spotify-web-api-js';
+import Featured from './Featured'
 
 
 const spotifyWebApi = new Spotify();
@@ -54,6 +55,7 @@ class App extends Component {
       })
   }
 
+
   render() {
     return (
       <div className="App">
@@ -72,6 +74,7 @@ class App extends Component {
           <br />
           <p>Playing on: {this.state.nowPlaying.device}</p>
         </div>
+        <Featured />
       </div >
     );
   }
