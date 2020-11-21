@@ -42,6 +42,7 @@ class Featured extends Component {
                     theList: {
                         message: response.message,
                         playlistName: response.playlists.items[0].name,
+                        // playlistName: response.playlists.items.map(obj => obj && obj.name),
                         playlistImg: response.playlists.items[0].images[0].url,
                         playlistLink: response.playlists.items[0].uri
                     }
@@ -59,8 +60,8 @@ class Featured extends Component {
                     <h4>{this.state.theList.playlistName}</h4>
                     <img src={this.state.theList.playlistImg} alt={this.state.theList.playlistName}></img>
                 </a>
-                {/* {this.state.theList.playListName.map(playlist => (
-                    <p>{playlist.playlists.name}</p>
+                {/* {this.state.theList.playListName.map(obj => (
+                    <p>{obj.playlists.name}</p>
                 ))} */}
             </div >
         );
